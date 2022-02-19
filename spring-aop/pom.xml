@@ -11,5 +11,13 @@
 
     <artifactId>spring-aop</artifactId>
 
+    <dependencies>
+        <!-- spring aspect -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+    </dependencies>
+
 
 </project>
