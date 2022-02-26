@@ -10,6 +10,7 @@
         <module>spring-transactions</module>
         <module>spring-core</module>
         <module>common-model</module>
+        <module>spring-mvc-web</module>
     </modules>
 
     <parent>
