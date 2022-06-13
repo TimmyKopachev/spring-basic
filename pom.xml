@@ -11,6 +11,7 @@
         <module>spring-core</module>
         <module>common-model</module>
         <module>spring-mvc-web</module>
+        <module>spring-integration-amqp</module>
     </modules>
 
     <parent>
