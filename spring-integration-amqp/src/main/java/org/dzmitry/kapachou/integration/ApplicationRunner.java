@@ -1,11 +1,11 @@
 package org.dzmitry.kapachou.integration;
 
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.dzmitry.kapachou.integration.model.MatchmakingDetails;
 import org.dzmitry.kapachou.integration.model.SearchingMatchmakingRequest;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.Banner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -13,10 +13,10 @@ import org.springframework.integration.annotation.IntegrationComponentScan;
 import org.springframework.integration.config.EnableIntegration;
 import org.springframework.integration.support.json.JsonObjectMapper;
 import org.springframework.integration.support.json.JsonObjectMapperProvider;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 
-import java.io.IOException;
 import java.util.Random;
-import java.util.stream.LongStream;
 
 import static org.dzmitry.kapachou.integration.model.MatchmakingMode.CAPTURE_FLAG;
 import static org.dzmitry.kapachou.integration.model.MatchmakingMode.DEATHMATCH;
@@ -26,30 +26,28 @@ import static org.dzmitry.kapachou.integration.model.MatchmakingMode.DEATHMATCH;
 @IntegrationComponentScan
 @AllArgsConstructor
 @SpringBootApplication
-public class ApplicationRunner implements org.springframework.boot.ApplicationRunner {
+@EnableScheduling
+public class ApplicationRunner {
 
     final RabbitTemplate rabbitTemplate;
 
     public static void main(String[] args) {
-        new SpringApplicationBuilder().sources(ApplicationRunner.class).bannerMode(Banner.Mode.OFF).run(args);
+        new SpringApplicationBuilder()
+                .sources(ApplicationRunner.class)
+                .bannerMode(Banner.Mode.OFF)
+                .run(args);
     }
 
-    @Override
-    public void run(ApplicationArguments args) {
+    @SneakyThrows
+    @Scheduled(fixedDelay = 5000)
+    public void sendRequestToFindMatchmaking() {
         JsonObjectMapper<?, ?> objectMapper = JsonObjectMapperProvider.newInstance();
-        // 1-50 = 49 players to aggregate
-        LongStream.range(1, 50).forEach(i -> {
-            try {
-                var message = objectMapper.toJson(createSearchMatchmakingRequest(i));
-                log.info("sending request to find a matchmaking: {}", message);
-                rabbitTemplate.convertAndSend("matchmaking.exchange", "matchmaking.routing.key", message);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+        var message = objectMapper.toJson(createSearchMatchmakingRequest(new Random().nextInt(100)));
+        log.info("sending request to find a matchmaking: {}", message);
+        rabbitTemplate.convertAndSend("matchmaking.exchange", "matchmaking.routing.key", message);
     }
 
-    private static SearchingMatchmakingRequest createSearchMatchmakingRequest(Long id) {
+    private static SearchingMatchmakingRequest createSearchMatchmakingRequest(Integer id) {
         var random = new Random();
 
         SearchingMatchmakingRequest request = new SearchingMatchmakingRequest();

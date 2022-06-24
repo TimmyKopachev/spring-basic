@@ -13,6 +13,7 @@ public class ReadyLobbyLoggingHandler {
     void readyLobbyLogging(ReadyLobbyResponse response) {
         log.info("----------------");
         log.info("Lobby is ready with details: [{}]", response);
+        log.info("----------------");
     }
 
 }
