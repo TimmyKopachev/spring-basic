@@ -3,16 +3,6 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <packaging>pom</packaging>
-    <modules>
-        <module>spring-security</module>
-        <module>spring-aop</module>
-        <module>spring-transactions</module>
-        <module>spring-core</module>
-        <module>common-model</module>
-        <module>spring-mvc-web</module>
-        <module>spring-integration-amqp</module>
-    </modules>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -23,6 +13,18 @@
     <groupId>org.dzmitry.kapachou.basic</groupId>
     <artifactId>spring-basic</artifactId>
     <version>1.0</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>spring-security</module>
+        <module>spring-aop</module>
+        <module>spring-transactions</module>
+        <module>spring-core</module>
+        <module>common-model</module>
+        <module>spring-mvc-web</module>
+        <module>spring-integration-amqp</module>
+        <module>spring-state-machine</module>
+    </modules>
 
     <developers>
         <developer>
@@ -32,13 +34,21 @@
         </developer>
     </developers>
 
+    <properties>
+        <encoding>UTF-8</encoding>
+        <java.version>11</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>${encoding}</project.reporting.outputEncoding>
+    </properties>
+
 
     <dependencies>
         <!-- lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
         </dependency>
         <!-- spring starter -->
         <dependency>

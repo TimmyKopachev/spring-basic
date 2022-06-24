@@ -1,0 +1,12 @@
+version: '3.7'
+
+services:
+  rabbitmq-demo:
+    image: rabbitmq:management
+    container_name: 'demo-rabbitmq-container'
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+
+

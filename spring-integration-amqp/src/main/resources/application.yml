@@ -1,0 +1,6 @@
+game:
+  amqp:
+    matchmaking:
+      queue: matchmaking
+      exchange: matchmaking.exchange
+      routingkey: matchmaking.routing.key
