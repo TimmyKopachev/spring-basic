@@ -21,7 +21,6 @@ import org.springframework.integration.amqp.dsl.Amqp;
 import org.springframework.integration.dsl.IntegrationFlow;
 import org.springframework.integration.dsl.IntegrationFlows;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 
 @Slf4j
@@ -42,8 +41,7 @@ public class InboundAmqpConfiguration implements InitializingBean {
         log.info("Setting up the Queue/Exchange/Binding for local environment");
         setupAmqpQueues();
     }
-
-    @PostConstruct
+    
     public void setupAmqpQueues() {
         amqpProperties.forEach(amqpProperty -> {
             Queue queue = new Queue(amqpProperty.getQueue());
