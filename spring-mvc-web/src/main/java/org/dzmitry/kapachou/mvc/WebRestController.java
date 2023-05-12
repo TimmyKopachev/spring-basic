@@ -3,13 +3,18 @@ package org.dzmitry.kapachou.mvc;
 import lombok.AllArgsConstructor;
 import org.dzmitry.kapachou.mvc.model.Employee;
 import org.dzmitry.kapachou.mvc.service.EmployeeService;
+import org.dzmitry.kapachou.mvc.validation.EmployeeValidation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Collection;
+import java.util.List;
 
 @RestController
+@Validated
 @RequestMapping("employees")
 @AllArgsConstructor
 public class WebRestController {
@@ -29,8 +34,8 @@ public class WebRestController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Employee createEmployee(@RequestBody Employee employee) {
-        return employeeService.save(employee);
+    public void createEmployee(@RequestBody @EmployeeValidation List<@Valid Employee> employees) {
+        employees.forEach(employeeService::save);
     }
 
     @PutMapping

@@ -21,9 +21,9 @@ public class EmployeeService {
 
     @PostConstruct
     public void setup() {
-        employeeDummyStorage.put(1L, new Employee("Dzmitry", SENIOR));
-        employeeDummyStorage.put(2L, new Employee("Viktor", SENIOR));
-        employeeDummyStorage.put(3L, new Employee("Roma", MIDDLE));
+//        employeeDummyStorage.put(1L, new Employee("Dzmitry", SENIOR));
+//        employeeDummyStorage.put(2L, new Employee("Viktor", SENIOR));
+//        employeeDummyStorage.put(3L, new Employee("Roma", MIDDLE));
     }
 
     public Employee save(Employee employee) {
