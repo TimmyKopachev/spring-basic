@@ -4,7 +4,6 @@ import javax.validation.Constraint;
 import javax.validation.Payload;
 import java.lang.annotation.*;
 
-//@Target(ElementType.TYPE)
 @Constraint(validatedBy = EmployeeConstraintValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface EmployeeValidation {
