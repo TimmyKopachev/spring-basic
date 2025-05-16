@@ -1,6 +1,10 @@
 package org.dzmitry.kapachou.tx;
 
 
+import lombok.RequiredArgsConstructor;
+import org.dzmitry.kapachou.tx.service.ProcessRequestService;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.Banner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -15,8 +19,10 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
             DataSourceTransactionManagerAutoConfiguration.class,
             HibernateJpaAutoConfiguration.class
 })
-public class ApplicationTxRunner {
+@RequiredArgsConstructor
+public class ApplicationTxRunner implements ApplicationRunner {
 
+    final ProcessRequestService prService;
 
     public static void main(String[] args) {
         new SpringApplicationBuilder()
@@ -25,4 +31,8 @@ public class ApplicationTxRunner {
                 .run(args);
     }
 
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
+        prService.distributedProcessRequestUpdate();
+    }
 }
