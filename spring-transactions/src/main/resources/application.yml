@@ -1,0 +1,25 @@
+database:
+  setting:
+    first:
+      host: localhost
+      url: jdbc:sqlserver://localhost:1433;encrypt=false;
+      port: 1433
+      username: iamuser
+      password: passw0rd@Dima
+      dbName: prePrDB
+      uniqueResourceName: first-resource
+      driverClass: com.microsoft.sqlserver.jdbc.SQLServerXADataSource
+    second:
+      host: localhost
+      url: jdbc:sqlserver://localhost:1434;encrypt=false;
+      port: 1434
+      username: iamuser
+      password: passw0rd@Dima
+      dbName: postPrDB
+      uniqueResourceName: second-resource
+      driverClass: com.microsoft.sqlserver.jdbc.SQLServerXADataSource\
+
+logging:
+  level:
+    com.atomikos: DEBUG
+    com.atomikos.icatch: DEBUG

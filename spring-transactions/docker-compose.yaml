@@ -1,0 +1,84 @@
+version: '3.9'
+
+services:
+  first-db-mssql-server:
+    platform: linux/amd64
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: "first-db-mssql"
+    restart: always
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=passw0rd@Dima
+    ports:
+      - "1433:1433"
+    healthcheck:
+      test: [ "CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S 'first-db-mssql' -U 'sa' -P 'passw0rd@Dima' -C -N -Q 'SELECT 1' || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 2
+    volumes:
+      - ./init-mssql-env:/init-mssql-env
+    networks:
+      - mssql-network
+
+  second-db-mssql-server:
+    platform: linux/amd64
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: "second-db-mssql"
+    restart: always
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=passw0rd@Dima
+    ports:
+      - "1434:1433"
+    healthcheck:
+      test: [ "CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S 'second-db-mssql' -U 'sa' -P 'passw0rd@Dima' -C -N -Q 'SELECT 1' || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 2
+    volumes:
+      - ./init-mssql-env:/init-mssql-env
+    networks:
+      - mssql-network
+
+  init-db-mssql-cluster-1:
+    platform: linux/amd64
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: "init-db-mssql-cluster-1"
+    depends_on:
+      first-db-mssql-server:
+        condition: service_healthy
+    command: >
+      bash -c
+      " echo 'Waiting before running init script...';
+        /opt/mssql-tools18/bin/sqlcmd -S first-db-mssql -U SA -P passw0rd@Dima -C -N -i /init-mssql-env/init-mssql-cluster-1.sql;
+        /opt/mssql-tools18/bin/sqlcmd -S first-db-mssql -U SA -P passw0rd@Dima -C -N -i /init-mssql-env/init-xa-granted-1.sql;
+        echo 'Init script executed.'
+      "
+    volumes:
+      - ./init-mssql-env:/init-mssql-env
+    networks:
+      - mssql-network
+
+  init-db-mssql-cluster-2:
+    platform: linux/amd64
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: "init-db-mssql-cluster-2"
+    depends_on:
+      second-db-mssql-server:
+        condition: service_healthy
+    command: >
+      bash -c
+      "
+        echo 'Waiting before running init script...';
+        /opt/mssql-tools18/bin/sqlcmd -S second-db-mssql -U SA -P passw0rd@Dima -C -N -i /init-mssql-env/init-mssql-cluster-2.sql;
+        /opt/mssql-tools18/bin/sqlcmd -S second-db-mssql -U SA -P passw0rd@Dima -C -N -i /init-mssql-env/init-xa-granted-2.sql;
+        echo 'Init script executed.'
+      "
+    volumes:
+      - ./init-mssql-env:/init-mssql-env
+    networks:
+      - mssql-network
+
+networks:
+  mssql-network:
